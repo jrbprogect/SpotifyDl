@@ -127,9 +127,11 @@ app.get('/spotifydl', async (req, res) => {
 
             app.get(`/download/${track.id}/${track.name.replace(/[^a-zA-Z0-9]/g, '_')}.mp3`, (req, res) => {
                 const filePath = path.join(outputDir, `${track.name.replace(/[^a-zA-Z0-9]/g, '_')}.mp3`);
-                res.download(filePath, async () => {
+                res.download(filePath);
+                
+                setTimeout(async () => {
                     await deleteFiles(outputDir);
-                });
+                }, 900000);
             });
 
         } catch (error) {
@@ -209,16 +211,20 @@ app.get('/spotifydl', async (req, res) => {
 
             app.get(`/download/${id}/${name}.zip`, (req, res) => {
                 const filePath = path.join(outputDir, `${name}.zip`);
-                res.download(filePath, async () => {
+                res.download(filePath);
+                
+                setTimeout(async () => {
                     await deleteFiles(outputDir);
-                });
+                }, 900000);
             });
 
             app.get(`/download/${id}/${name}.mp3`, (req, res) => {
                 const filePath = path.join(outputDir, `${name}.mp3`);
-                res.download(filePath, async () => {
+                res.download(filePath);
+
+                setTimeout(async () => {
                     await deleteFiles(outputDir);
-                });
+                }, 900000);
             });
 
         } catch (error) {
@@ -230,6 +236,17 @@ app.get('/spotifydl', async (req, res) => {
     }
 });
 
+async function deleteFiles(directory) {
+    try {
+        await fs.remove(directory);
+        console.log(`Deleted files in directory: ${directory}`);
+    } catch (error) {
+        console.error(`Error deleting files in ${directory}:`, error);
+    }
+}
+
 app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+    console.log(`Server running on port ${port}`);
 });
+
+    
